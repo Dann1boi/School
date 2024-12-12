@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Rotating Textured Cube</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+</head>
+
+<body>
+  <div style="text-align: center;">
+    <h1>3D Rotating Textured Cube</h1>
+    <p>Click and use arrow keys to control rotation.</p>
+  </div>
+  <script>
+    // Set up the scene, camera, and renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Add lighting to the scene
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
+    scene.add(ambientLight);
+
+    const pointLight = new THREE.PointLight(0xffffff, 1); // Bright point light
+    pointLight.position.set(10, 10, 10);
+    scene.add(pointLight);
+
+    // Create a geometry and load textures
+    const geometry = new THREE.BoxGeometry();
+    const loader = new THREE.TextureLoader();
+
+    const textures = [
+      loader.load('https://cdn11.bigcommerce.com/s-jl6azsq4yb/images/stencil/640w/products/344/858/balllsm-2__66357.1614032720.jpg?c=2?text=Texture+1'),
+      loader.load('https://m.media-amazon.com/images/I/612D7IaceVL._AC_SX679_.jpg?text=Texture+2'),
+      loader.load('https://cdn11.bigcommerce.com/s-jl6azsq4yb/images/stencil/640w/products/344/3328/BALLLSM_purple__21333.1614032721.jpg?c=2?text=Texture+3'),
+      loader.load('https://cdn11.bigcommerce.com/s-jl6azsq4yb/images/stencil/1280x1280/products/344/3330/BALLLSM_red__69813.1614032721.jpg?c=2?text=Texture+4'),
+      loader.load('https://images.squarespace-cdn.com/content/v1/554cc703e4b06ed5925924b7/1432121567590-HV9Z0J9PRBQRU0WT6W39/White+Stress+Ball.JPG?format=750w?text=Texture+5'),
+      loader.load('https://cdn.gopromotional.co.uk/images/catalog/products/stress-toys/rjp-S0607-smiley-face-stress-balls-purple_i173223-w0-p10028.jpg?text=Texture+6')
+    ];
+
+    const materials = textures.map(texture => new THREE.MeshStandardMaterial({map: texture}));
+
+    // Create a mesh
+    const cube = new THREE.Mesh(geometry, materials);
+    scene.add(cube);
+
+    // Position the camera
+    camera.position.z = 5;
+
+    // Rotation control
+    let rotationSpeedX = 0.01;
+    let rotationSpeedY = 0.01;
+
+    // Listen for keyboard input
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowUp') rotationSpeedX += 0.01;
+      if (event.key === 'ArrowDown') rotationSpeedX -= 0.01;
+      if (event.key === 'ArrowRight') rotationSpeedY += 0.01;
+      if (event.key === 'ArrowLeft') rotationSpeedY -= 0.01;
+    });
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      cube.rotation.x += rotationSpeedX;
+      cube.rotation.y += rotationSpeedY;
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
+</body>
+
+</html>
